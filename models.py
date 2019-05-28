@@ -47,7 +47,7 @@ class Comment(Model):
 	class Meta:
 		database=DATABASE
 
-# def initialize():
-# 	DATABASE.connect()
-# 	DATABASE.create_tabes([name], safe=True)
-# 	DATABASE.close()
+def initialize():
+	DATABASE.connect()
+	DATABASE.create_tables([User], safe=True)
+	DATABASE.close()

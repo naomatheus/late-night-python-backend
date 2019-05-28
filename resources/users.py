@@ -11,8 +11,7 @@ import models
 user_fields = {
 	'username': fields.String,
 	'password': fields.String,
-	## not sure about fields."" entry
-	'email': fields.Email
+	'email': fields.String
 	## not sure about fields."" entry
 }
 
@@ -40,7 +39,7 @@ class UserList(Resource):
 		self.reqparse.add_argument(
 			'verify_password',
 			required=True,
-			help='No pasword verification provided'
+			help='No pasword verification provided',
 			location=['form', 'json']
 			)
 		super().__init__()

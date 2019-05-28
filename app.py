@@ -1,10 +1,17 @@
-from flask import Flask, g
+from flask import Flask, g, jsonify
+from flask_login import LoginManager
 import models
+from flask_cors import CORS
+from resources.users import users_api
+
+import config
 
 DEBUG = True
 PORT = 8000
 
 app = Flask(__name__)
+
+app.register_blueprint(users_api, url_prefix='/users')
 
 @app.before_request
 def before_request():
