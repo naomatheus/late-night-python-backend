@@ -14,7 +14,10 @@ from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 
 class User(Model):
-	name=CharField()
+	username=CharField()
+	password=CharField()
+	email=CharField()
+	# not sure if email/pw need to be required
 
 # DO NOT NEED A COMMENTS MADE OR COMMENT ID HERE
 
@@ -22,8 +25,10 @@ class User(Model):
 		database=DATABASE
 
 
-class Place(Model):
-	# name=CharField()
+class Restaurant(Model):
+	name=CharField()
+	address=CharField()
+	place_id=CharField()
 
 # DO NOT NEED A COMMENT ID or comment key in this table
 
@@ -32,7 +37,11 @@ class Place(Model):
 
 
 class Comment(Model):
-	# name=CharField()
+	comment_author=ForeignKeyField(User)
+	comment_body=CharField()
+	place_id=ForeignKeyField(Restaurant)
+
+
 
 
 	class Meta:
