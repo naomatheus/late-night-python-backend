@@ -1,11 +1,7 @@
 import json
-
 from flask import jsonify, Blueprint, abort, make_response
-
 from flask_restful import (Resource, Api, reqparse, inputs, fields, marshal, marshal_with, url_for)
-
 from flask_login import login_user, logout_user, login_required, current_user
-
 import models
 
 user_fields = {
@@ -55,11 +51,13 @@ class UserList(Resource):
 			return marshal(user, user_fields), 201
 		return make_response(
 			json.dumps({
-				'error': 'Passowrd and password verificaiton do not match'
+				'error': 'Password and password verificaiton do not match'
 				}), 400)
 
-users_api = Blueprint('resrouces.users', __name__)
+users_api = Blueprint('resources.users', __name__)
+
 api = Api(users_api)
+
 api.add_resource(
 	UserList,
 	'/registration',

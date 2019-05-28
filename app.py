@@ -6,10 +6,14 @@ from resources.users import users_api
 
 import config
 
+login_manager = LoginManager()
+
 DEBUG = True
 PORT = 8000
 
 app = Flask(__name__)
+
+CORS(users_api, origin=['http://localhost:8000'], supports_credentials=True)
 
 app.register_blueprint(users_api, url_prefix='/users')
 
