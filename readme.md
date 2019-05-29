@@ -12,3 +12,9 @@
 ### Get the routes testing
 
 ### Get the routes done
+
+
+# Afternoon 
+
+- look into deploying 
+- finish front end 
