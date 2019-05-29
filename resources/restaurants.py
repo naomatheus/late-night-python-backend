@@ -50,23 +50,19 @@ class RestaurantList(Resource):
 				print(key, '<-- key')
 				if key=="results":
 					restaurantDetails = key
-					
-				# for index in key:
-				# 	# if index=="geography"
-				# 	print(index)
 
-				
+			print(type(json_response),'<-- this is the type of the json_response')
 
+			result_key = list(json_response)[2]
+			print(result_key,'<-- this is result key in json resp')
+			
+			result_val = list(json_response.values())[2]
+			
+			## save the whole obj as a var
+			## only selectively return the fields that we need
+			## place_id, address, name
 
-			# the key parameter in this for in loop reveals the first levels of objects holding data within the response
-
-			# WE NEED to access the results key and the values it holds
-
-			# for restaurant_fields in resp.json():
-			# 	print(restaurant_fields, '<--- these are the restaurant_fields')
-			# 	print(resp, '<-- this is response')
-			# 	new_restaurants = [marshal(restaurant, restaurant_fields) for restaurant in models.Restaurant.select()]
-			# print(resp.json())
+			
 		return resp.json()
 
 
