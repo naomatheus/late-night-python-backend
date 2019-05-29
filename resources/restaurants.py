@@ -68,20 +68,48 @@ class RestaurantList(Resource):
 			# restaurantData = restaurantsData["name"]["place_id"]["vicinity"]
 
 			## create a dictionary with those properties and send over to the client
-			
-		return restaurantData
 
+			## now change this route to look at the same k and v for all of the returned restaurant values 
+			
+		return restaurantData, 'this is restaurantData'
+
+class Restaurant(Resource):
+	def __init__(self):
+		self.reqparse = reqparse.RequestParser()
+		self.reqparse.add_argument(
+			'name',
+			required=False,
+			help='No restaurant name provided',
+			location=['json']
+			)
+
+		self.reqparse.add_argument(
+			'address',
+			required=False,
+			help='No restaurant address provided',
+			location=[ 'json']
+			)
+		self.reqparse.add_argument(
+			'place_id',
+			required=False,
+			help='No restaurant place_id provided',
+			location=['json']
+			)
+
+		super().__init__()
 
 	def get(self, place_id):
-		try:
-			resp = get('https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&fields=name,formatted_address,place_id&key=AIzaSyDchPWjgowvaycrHzTZj44OEMBLdmt6584')
-			print(resp,'<-- this is response in the second get restaurant call')
+		resp = requests.get('https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&fields=name,formatted_address,place_id&key=AIzaSyDchPWjgowvaycrHzTZj44OEMBLdmt6584')
+		print(resp,'<-- this is response in the second get restaurant call')
 
-			oneRestaurant = resp.json()
-			print(oneRestaurant,'<-- this is one restaurant')
-		
-		except:
+		if resp.status_code != 200:
 			raise ApiError('GET /restaurants/{}'.format(resp.status_code))
+
+		else:
+			oneRestaurant = resp.json()
+		print(oneRestaurant,'<-- this is one restaurant')
+		
+		return oneRestaurant
 
 	@marshal_with(restaurant_fields)
 	def post(self):
@@ -104,8 +132,8 @@ api.add_resource(
 	endpoint='restaurants'
 )
 api.add_resource(
-    RestaurantList,
-    '/restaurant/<str:place_id>',
+    Restaurant,
+    '/restaurant/<string:place_id>',
     endpoint='restaurant'
 )
 
