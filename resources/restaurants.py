@@ -23,12 +23,11 @@ class RestaurantList(Resource):
 			help='No restaurant name provided',
 			location=['json']
 			)
-
 		self.reqparse.add_argument(
 			'address',
 			required=False,
 			help='No restaurant address provided',
-			location=[ 'json']
+			location=['json']
 			)
 		self.reqparse.add_argument(
 			'place_id',
@@ -36,7 +35,6 @@ class RestaurantList(Resource):
 			help='No restaurant place_id provided',
 			location=['json']
 			)
-
 		super().__init__()
 
 	def get(self):
@@ -51,27 +49,27 @@ class RestaurantList(Resource):
 			print(type(json_response),'<-- this is the type of the json_response')
 			
 			## save the whole obj as a var			
-			restaurantsData = list(json_response.values())[2]
+			# restaurantsData = list(json_response.values())[2]
 
-			for k, v in enumerate(restaurantsData):
-				# restaurantData = {}
-				print(k,v)
-				print(v["name"])
-				print(v["place_id"])
-				print(v["vicinity"])
-				restaurantData = dict(
-						name=v["name"],
-						place_id=v["place_id"],
-						vicinity=v["vicinity"]
-					)
-				print(restaurantData)
+			# for k, v in enumerate(restaurantsData):
+			# 	# restaurantData = {}
+			# 	print(k,v)
+			# 	print(v["name"])
+			# 	print(v["place_id"])
+			# 	print(v["vicinity"])
+			# 	restaurantData = dict(
+			# 			name=v["name"],
+			# 			place_id=v["place_id"],
+			# 			vicinity=v["vicinity"]
+			# 		)
+			# 	print(restaurantData)
 			# restaurantData = restaurantsData["name"]["place_id"]["vicinity"]
 
 			## create a dictionary with those properties and send over to the client
 
 			## now change this route to look at the same k and v for all of the returned restaurant values 
 			
-		return restaurantData, 'this is restaurantData'
+		return json_response, 'this is restaurantData'
 
 class Restaurant(Resource):
 	def __init__(self):
@@ -80,20 +78,21 @@ class Restaurant(Resource):
 			'name',
 			required=False,
 			help='No restaurant name provided',
-			location=['json']
+			location=['form', 'json']
 			)
 
 		self.reqparse.add_argument(
 			'address',
 			required=False,
 			help='No restaurant address provided',
-			location=[ 'json']
+			location=['form', 'json']
 			)
+
 		self.reqparse.add_argument(
 			'place_id',
 			required=False,
 			help='No restaurant place_id provided',
-			location=['json']
+			location=['form', 'json']
 			)
 
 		super().__init__()
@@ -112,8 +111,12 @@ class Restaurant(Resource):
 		return oneRestaurant
 
 	@marshal_with(restaurant_fields)
-	def post(self):
-		args = self.reqparse_args()
+	def post(self, place_id):
+		args = self.reqparse.parse_args()
+		print(args, '<==== args (req.body')
+		restaurant = models.Restaurant.create(**args)
+		print(restaurant, '<===', type(restaurant))
+		return (restaurant, 201)
 
 		models.Restaurant.create(**args)
 
@@ -136,9 +139,3 @@ api.add_resource(
     '/restaurant/<string:place_id>',
     endpoint='restaurant'
 )
-
-
-
-
-
-
