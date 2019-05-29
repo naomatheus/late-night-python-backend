@@ -46,13 +46,12 @@ class RestaurantList(Resource):
 			raise ApiError('GET /restaurants/{}'.format(resp.status_code))
 		else:	
 			json_response = resp.json()
-			for key in json_response:
-				print(key, '<-- key')
-				if key=="results":
-					restaurantDetails = key
+			
 
 			print(type(json_response),'<-- this is the type of the json_response')
 
+			
+			
 			result_key = list(json_response)[2]
 			print(result_key,'<-- this is result key in json resp')
 			
@@ -67,6 +66,9 @@ class RestaurantList(Resource):
 			for k in result_val[3].keys():
 				print(k,result_val[3][k])
 
+			# enumerate	
+			obj["name"]
+
 			# print(result_val[3][5],'<---result_val5')
 			# print(result_val[3][12],'<---result_val12')
 			# for key in result_val.keys():
@@ -74,6 +76,8 @@ class RestaurantList(Resource):
 				
 			## only selectively return the fields that we need
 			## place_id, address, name
+
+			## create a dictionary with those properties and send over to the client
 
 			
 		return resp.json()
