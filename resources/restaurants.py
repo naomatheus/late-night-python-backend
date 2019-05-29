@@ -49,30 +49,22 @@ class RestaurantList(Resource):
 			
 
 			print(type(json_response),'<-- this is the type of the json_response')
-
-			
-			
-			result_key = list(json_response)[2]
-			print(result_key,'<-- this is result key in json resp')
 			
 			## save the whole obj as a var			
-			result_val = list(json_response.values())[2]
-			# print(type(result_val),'<-- type of result_val')
+			restaurantsData = list(json_response.values())[2]
+			# print(type(restaurantsData[3]),'<---restaurantsData3 type')
 
-			print(type(result_val[3]),'<---result_val3 type')
-			# for value in result_val[3]:
-			# print(dict.values(result_val[3][0]),'<-- inside of dict.values')
+			# restaurantData = restaurantsData["name"]["place_id"]["vicinity"]
+			# print(restaurantsData)
 
-			for k in result_val[3].keys():
-				print(k,result_val[3][k])
+			for k, v in enumerate(restaurantsData):
+				print(k,v)
 
-			# enumerate	
-			obj["name"]
+			# for k in restaurantsData[3].keys():
+			# 	print(k,restaurantsData[3][k])
 
-			# print(result_val[3][5],'<---result_val5')
-			# print(result_val[3][12],'<---result_val12')
-			# for key in result_val.keys():
-			# 	print(key,'<--key in result_val')
+			# # enumerate	
+			# obj["name"]
 				
 			## only selectively return the fields that we need
 			## place_id, address, name
