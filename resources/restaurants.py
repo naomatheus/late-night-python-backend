@@ -56,9 +56,18 @@ class RestaurantList(Resource):
 			result_key = list(json_response)[2]
 			print(result_key,'<-- this is result key in json resp')
 			
+			## save the whole obj as a var			
 			result_val = list(json_response.values())[2]
-			
-			## save the whole obj as a var
+			print(type(result_val),'<-- type of result_val')
+
+			print(type(result_val[3]),'<---result_val3 type')
+			# for value in result_val[3]:
+			print(dict.values(result_val[3][0]),'<-- inside of dict.values')
+			# print(result_val[3][5],'<---result_val5')
+			# print(result_val[3][12],'<---result_val12')
+			# for key in result_val.keys():
+			# 	print(key,'<--key in result_val')
+				
 			## only selectively return the fields that we need
 			## place_id, address, name
 
