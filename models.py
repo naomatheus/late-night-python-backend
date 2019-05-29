@@ -7,9 +7,6 @@ DATABASE = SqliteDatabase('late-night.sqlite')
 # eventually we'll switch to POSTGRES and uncomment this
 
 # DATABASE = PostgresqlDatabase('late-night', user='matton',password='matton')
-
-
-
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 
@@ -20,7 +17,6 @@ class User(UserMixin, Model):
 	# not sure if email/pw need to be required
 
 # DO NOT NEED A COMMENTS MADE OR COMMENT ID HERE
-
 	class Meta:
 		database=DATABASE
 
@@ -66,5 +62,5 @@ class Comment(Model):
 
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables([User], safe=True)
+	DATABASE.create_tables([User, Restaurant], safe=True)
 	DATABASE.close()

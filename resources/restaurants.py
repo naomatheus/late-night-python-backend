@@ -40,13 +40,17 @@ class RestaurantList(Resource):
 		super().__init__()
 
 	def get(self):
-		resp = requests.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=41.8781,-87.6298&radius=5000&type=restaurant&keyword=open&keyword=late&key=AIzaSyCbQ8Y7CHZUWrnEGUCqC8fNR4Kw1dfk5AE')
+		resp = requests.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=41.8781,-87.6298&radius=5000&type=restaurant&keyword=open&keyword=late&key=AIzaSyDchPWjgowvaycrHzTZj44OEMBLdmt6584')
+
 		if resp.status_code != 200:
 			raise ApiError('GET /restaurants/{}'.format(resp.status_code))
-		for restaurant_fields in resp.json():
-			print(restaurant_fields)
-			new_restaurants = [marshal(restaurant, restaurant_fields) for restaurant in models.Restaurant.select()]
-		return new_restaurants
+		else:	
+			# for restaurant_fields in resp.json():
+			# 	print(restaurant_fields, '<--- these are the restaurant_fields')
+			# 	print(resp, '<-- this is response')
+			# 	new_restaurants = [marshal(restaurant, restaurant_fields) for restaurant in models.Restaurant.select()]
+			print(resp.json())
+		return resp.json()
 
 
 	@marshal_with(restaurant_fields)
@@ -62,11 +66,11 @@ class RestaurantList(Resource):
 
 restaurants_api = Blueprint('resources.restaurants', __name__)
 api = Api(restaurants_api)
-# api.add_resource(
-# 	RestaurantList,
-# 	'/restaurants',
-# 	endpoint='restaurants'
-# )
+api.add_resource(
+	RestaurantList,
+	'/restaurants',
+	endpoint='restaurants'
+)
 
 
 
