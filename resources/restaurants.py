@@ -66,6 +66,8 @@ class RestaurantList(Resource):
 			# restaurantData = restaurantsData["name"]["place_id"]["vicinity"]
 
 			## create a dictionary with those properties and send over to the client
+
+			## now change this route to look at the same k and v for all of the returned restaurant values 
 			
 		return restaurantData, 'this is restaurantData'
 
