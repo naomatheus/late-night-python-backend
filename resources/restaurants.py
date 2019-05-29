@@ -52,32 +52,42 @@ class RestaurantList(Resource):
 			
 			## save the whole obj as a var			
 			restaurantsData = list(json_response.values())[2]
-			# print(type(restaurantsData[3]),'<---restaurantsData3 type')
-
-			# restaurantData = restaurantsData["name"]["place_id"]["vicinity"]
-			# print(restaurantsData)
 
 			for k, v in enumerate(restaurantsData):
+				# restaurantData = {}
 				print(k,v)
-
-			# for k in restaurantsData[3].keys():
-			# 	print(k,restaurantsData[3][k])
-
-			# # enumerate	
-			# obj["name"]
-				
-			## only selectively return the fields that we need
-			## place_id, address, name
+				print(v["name"])
+				print(v["place_id"])
+				print(v["vicinity"])
+				restaurantData = dict(
+						name=v["name"],
+						place_id=v["place_id"],
+						vicinity=v["vicinity"]
+					)
+				print(restaurantData)
+			# restaurantData = restaurantsData["name"]["place_id"]["vicinity"]
 
 			## create a dictionary with those properties and send over to the client
-
 			
-		return resp.json()
+		return restaurantData
 
+
+	def get(self, place_id):
+		try:
+			resp = get('https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&fields=name,formatted_address,place_id&key=AIzaSyDchPWjgowvaycrHzTZj44OEMBLdmt6584')
+			print(resp,'<-- this is response in the second get restaurant call')
+
+			oneRestaurant = resp.json()
+			print(oneRestaurant,'<-- this is one restaurant')
+		
+		except:
+			raise ApiError('GET /restaurants/{}'.format(resp.status_code))
 
 	@marshal_with(restaurant_fields)
 	def post(self):
 		args = self.reqparse_args()
+
+		models.Restaurant.create(**args)
 
 
 	### POST restaurants/place_id/comment
@@ -93,7 +103,11 @@ api.add_resource(
 	'/restaurants',
 	endpoint='restaurants'
 )
-
+api.add_resource(
+    RestaurantList,
+    '/restaurant/<str:place_id>',
+    endpoint='restaurant'
+)
 
 
 
