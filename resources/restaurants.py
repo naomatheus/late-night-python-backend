@@ -45,11 +45,28 @@ class RestaurantList(Resource):
 		if resp.status_code != 200:
 			raise ApiError('GET /restaurants/{}'.format(resp.status_code))
 		else:	
+			json_response = resp.json()
+			for key in json_response:
+				print(key, '<-- key')
+				if key=="results":
+					restaurantDetails = key
+					
+				# for index in key:
+				# 	# if index=="geography"
+				# 	print(index)
+
+				
+
+
+			# the key parameter in this for in loop reveals the first levels of objects holding data within the response
+
+			# WE NEED to access the results key and the values it holds
+
 			# for restaurant_fields in resp.json():
 			# 	print(restaurant_fields, '<--- these are the restaurant_fields')
 			# 	print(resp, '<-- this is response')
 			# 	new_restaurants = [marshal(restaurant, restaurant_fields) for restaurant in models.Restaurant.select()]
-			print(resp.json())
+			# print(resp.json())
 		return resp.json()
 
 
