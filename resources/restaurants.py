@@ -5,7 +5,7 @@ from flask_restful import (Resource, Api, reqparse, inputs, fields, marshal, mar
 
 import requests
 
-from resources import comments
+
 
 import models
 
@@ -139,40 +139,23 @@ class Restaurant(Resource):
 		return oneRestaurant
 
 	# @app.route('/<string:place_id>/comment',methods=['GET'])
-	@marshal_with(comment_fields)
-	@marshal_with(restaurant_fields)
 
+	@marshal_with(restaurant_fields)
 	def post(self, place_id):
-		_json = request.json
-		_name=_json.name
-		_address=_json.address
-		_place_id = _json.place_id
-		_comment_body=_json.comment_body
-		_comment_author=_json.user_id
-		print(reqparse.parse_args)
-		print("HITTING THIS BLOCK? a")
+		# print(reqparse.parse_args)
 		args = self.reqparse.parse_args()
-		print("HITTING THIS BLOCK? b")
-		foundRestaurant = models.Restaurant.select(**args)
-		print("HITTING THIS BLOCK? c")
-		print(foundRestaurant)
-		print("HITTING THIS BLOCK? d")
-		print(g.user._get_current_object())
-		print("HITTING THIS BLOCK? e")
-		if  foundRestaurant:
-			print(args, '<==== args (req.body')
-			restaurant = models.Restaurant.create(**args)
-			print(restaurant, '<===', type(restaurant))
-			models.Restaurant.create(**args)
-		elif foundRestaurant:
-			print("HITTING THIS BLOCK? f")
-			if g.user._get_current_object():
-				comment = models.Comment.create(**args)
-		if foundRestaurant.place_id == place_id:
-			print("HITTING THIS BLOCK? g")
-			comment.save()
-			print("HITTING THIS BLOCK? h")
-		return (restaurant, comment, 201)
+		# foundRestaurant = models.Restaurant.select(**args)
+		# print(foundRestaurant)
+		# print(g.user._get_current_object())
+		# if foundRestaurant:
+		print(args, '<==== args (req.body')
+		restaurant = models.Restaurant.create(**args)
+		print(restaurant, '<===', type(restaurant))
+		# models.Restaurant.create(**args)
+		# elif foundRestaurant:
+		# 	if g.user._get_current_object():
+		# 		if foundRestaurant.place_id == place_id:
+		return (restaurant, 201)
 
 	### POST restaurants/place_id/comment
 		##1.) when route hit - checks DB for existing restaurant 
@@ -198,12 +181,12 @@ class Restaurant(Resource):
 # 			)		
 # 		super().__init__()
 
-comments_api = Blueprint('resources.comments', __name__)
+# comments_api = Blueprint('resources.comments', __name__)
 	
 restaurants_api = Blueprint('resources.restaurants', __name__)
 
 api = Api(restaurants_api)
-comment_api = Api(comments_api)
+# comment_api = Api(comments_api)
 api.add_resource(
 	RestaurantList,
 	'/restaurants',
@@ -214,8 +197,8 @@ api.add_resource(
     '/restaurant/<string:place_id>',
     endpoint='restaurant'
 )
-comment_api.add_resource(
-	Comment,
-	'<string:place_id>/comment',
-	endpoint='comment'
-	)
+# comment_api.add_resource(
+# 	Comment,
+# 	'<string:place_id>/comment',
+# 	endpoint='comment'
+# 	)
