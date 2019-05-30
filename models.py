@@ -1,12 +1,14 @@
 import datetime
 
+import config
+
 from peewee import *
 
-DATABASE = SqliteDatabase('late-night.sqlite')
+# DATABASE = SqliteDatabase('late-night.sqlite')
 
 # eventually we'll switch to POSTGRES and uncomment this
 
-# DATABASE = PostgresqlDatabase('late-night', user='matton',password='matton')
+DATABASE = PostgresqlDatabase('late_night', user='clayton',password=config.SQL_PASSWORD)
 
 
 
@@ -79,5 +81,5 @@ class Comment(Model):
 
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables([User], safe=True)
+	DATABASE.create_tables([User, Restaurant, Comment], safe=True)
 	DATABASE.close()
