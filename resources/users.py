@@ -63,11 +63,3 @@ api.add_resource(
 	'/registration',
 	endpoint='users'
 )
-
-
-
-
-
-
-
-

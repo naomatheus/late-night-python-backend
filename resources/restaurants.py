@@ -1,8 +1,11 @@
+# import app from resources
 import json
 from flask import jsonify, Blueprint, abort, make_response
 from flask_restful import (Resource, Api, reqparse, inputs, fields, marshal, marshal_with, url_for)
 
 import requests
+
+from resources import comments
 
 import models
 
@@ -13,6 +16,31 @@ restaurant_fields = {
 	'address': fields.String,
 	'place_id': fields.String
 }
+
+comment_fields = {
+#### also need the foreign key here which is the place_id of the restaurants
+	'place_id': fields.Integer,
+	'comment_body': fields.String,
+	'comment_author': fields.Integer
+}
+
+class Comment(Resource):
+	def __init__(self):
+		self.reqparse = reqparse.RequestParser()
+		self.reqparse.add_argument(
+			'comment_body',
+			required=False,
+			help='No comment_body provided',
+			location=['form', 'json']
+			)
+		self.reqparse.add_argument(
+			'comment_author',
+			required=False,
+			help='No comment_author provided',
+			location=['form', 'json']
+			)		
+		super().__init__()
+
 
 class RestaurantList(Resource):
 	def __init__(self):
@@ -110,16 +138,41 @@ class Restaurant(Resource):
 		
 		return oneRestaurant
 
+	# @app.route('/<string:place_id>/comment',methods=['GET'])
+	@marshal_with(comment_fields)
 	@marshal_with(restaurant_fields)
+
 	def post(self, place_id):
+		_json = request.json
+		_name=_json.name
+		_address=_json.address
+		_place_id = _json.place_id
+		_comment_body=_json.comment_body
+		_comment_author=_json.user_id
+		print(reqparse.parse_args)
+		print("HITTING THIS BLOCK? a")
 		args = self.reqparse.parse_args()
-		print(args, '<==== args (req.body')
-		restaurant = models.Restaurant.create(**args)
-		print(restaurant, '<===', type(restaurant))
-		return (restaurant, 201)
-
-		models.Restaurant.create(**args)
-
+		print("HITTING THIS BLOCK? b")
+		foundRestaurant = models.Restaurant.select(**args)
+		print("HITTING THIS BLOCK? c")
+		print(foundRestaurant)
+		print("HITTING THIS BLOCK? d")
+		print(g.user._get_current_object())
+		print("HITTING THIS BLOCK? e")
+		if  foundRestaurant:
+			print(args, '<==== args (req.body')
+			restaurant = models.Restaurant.create(**args)
+			print(restaurant, '<===', type(restaurant))
+			models.Restaurant.create(**args)
+		elif foundRestaurant:
+			print("HITTING THIS BLOCK? f")
+			if g.user._get_current_object():
+				comment = models.Comment.create(**args)
+		if foundRestaurant.place_id == place_id:
+			print("HITTING THIS BLOCK? g")
+			comment.save()
+			print("HITTING THIS BLOCK? h")
+		return (restaurant, comment, 201)
 
 	### POST restaurants/place_id/comment
 		##1.) when route hit - checks DB for existing restaurant 
@@ -127,8 +180,30 @@ class Restaurant(Resource):
 		##3.) create comments w/ referenced foreign field
 		##4.) ...maybe .save() foreign field in restaurant table?
 
+
+# class Comment(Resource):
+# 	def __init__(self):
+# 		self.reqparse = reqparse.RequestParser()
+# 		self.reqparse.add_argument(
+# 			'comment_body',
+# 			required=False,
+# 			help='No comment_body provided',
+# 			location=['form', 'json']
+# 			)
+# 		self.reqparse.add_argument(
+# 			'comment_author',
+# 			required=False,
+# 			help='No comment_author provided',
+# 			location=['form', 'json']
+# 			)		
+# 		super().__init__()
+
+comments_api = Blueprint('resources.comments', __name__)
+	
 restaurants_api = Blueprint('resources.restaurants', __name__)
+
 api = Api(restaurants_api)
+comment_api = Api(comments_api)
 api.add_resource(
 	RestaurantList,
 	'/restaurants',
@@ -139,3 +214,8 @@ api.add_resource(
     '/restaurant/<string:place_id>',
     endpoint='restaurant'
 )
+comment_api.add_resource(
+	Comment,
+	'<string:place_id>/comment',
+	endpoint='comment'
+	)
