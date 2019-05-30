@@ -40,12 +40,13 @@ class UserList(Resource):
 			)
 		super().__init__()
 
+
 	def post(self):
 		args = self.reqparse.parse_args()
 		print((args), 'arguments to form body')
 		if args['password'] == args['verify_password']:
 			print(args, 'arguments to form body')
-			user = models.User.create_user(**args)
+			user = models.User.create(**args)
 
 			login_user(user)
 			return marshal(user, user_fields), 201
@@ -53,6 +54,62 @@ class UserList(Resource):
 			json.dumps({
 				'error': 'Password and password verificaiton do not match'
 				}), 400)
+
+class User(Resource):
+	def __init__(self):
+		self.reqparse = reqparse.RequestParser()
+		self.reqparse.add_argument(
+			'username',
+			required=True,
+			help='No username provided',
+			location=['form', 'json']
+		)
+		self.reqparse.add_argument(
+			'password',
+			required=True,
+			help='No password provided',
+			location=['form', 'json']
+		)
+		self.reqparse.add_argument(
+			'email',
+			required=True,
+			help='No email provided',
+			location=['form', 'json']
+		)
+		self.reqparse.add_argument(
+			'verify_password',
+			required=True,
+			help='No pasword verification provided',
+			location=['form', 'json']
+			)
+		super().__init__()
+
+	@marshal_with(user_fields)
+	def get(self,id):
+
+		try: 
+			user = models.User.get(models.User.id==id)
+		except models.User.DoesNotExist:
+			abort(404)
+		else:
+			return (user, 200)
+
+	@marshal_with(user_fields)
+	def get(self,id):
+
+		try:
+			print(current_user,'<----- CURRENT USER ')
+			logged_out_user = models.User.get(models.User.id==id)
+			logout_user(logged_out_user)
+
+		except models.User.DoesNotExist:
+			abort(404)
+		else:
+			return (logged_out_user, 200)
+
+
+
+
 
 users_api = Blueprint('resources.users', __name__)
 
@@ -64,10 +121,16 @@ api.add_resource(
 	endpoint='users'
 )
 
+api.add_resource(
+	User,
+	'/logout',
+	# logout a user
+	endpoint='logout'
+	)
 
-
-
-
-
-
-
+# api.add_resource(
+# 	User,
+# 	'/<int:id>/logout>',
+# 	# logout user by id
+# 	endpoint='users'
+# )

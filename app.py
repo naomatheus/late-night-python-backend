@@ -4,6 +4,8 @@ import models
 from flask_cors import CORS
 from resources.users import users_api
 from resources.restaurants import restaurants_api
+from resources.comments import comments_api
+from flask_login import current_user
 
 import config
 
@@ -27,15 +29,19 @@ def load_user(userid):
 
 CORS(users_api, origin=['http://localhost:8000'], supports_credentials=True)
 CORS(restaurants_api, origin=['http://localhost:8000'], supports_credentials=True)
+CORS(comments_api, origin=['http://localhost:8000'], supports_credentials=True,allow_headers='*')
 
 app.register_blueprint(users_api, url_prefix='/users')
 app.register_blueprint(restaurants_api, url_prefix='/restaurants')
+app.register_blueprint(comments_api, url_prefix='/restaurants/')
 
 @app.before_request
 def before_request():
 	"""Connect to the DB before each request"""
 	g.db = models.DATABASE
 	g.db.connect()
+	g.user = current_user
+	g.user._get_current_object()
 
 @app.after_request
 def after_request(response):

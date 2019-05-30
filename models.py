@@ -1,12 +1,10 @@
 import datetime
 
+import config
+
 from peewee import *
 
-DATABASE = SqliteDatabase('late-night.sqlite')
-
-# eventually we'll switch to POSTGRES and uncomment this
-
-# DATABASE = PostgresqlDatabase('late-night', user='matton',password='matton')
+DATABASE = PostgresqlDatabase('late_night', user='clayton',password=config.SQL_PASSWORD)
 
 
 
@@ -25,18 +23,18 @@ class User(UserMixin, Model):
 		database=DATABASE
 
 	@classmethod
-	def create_user(cls, username, email, password, **kwargs):
+	def create_users(cls, username, email, password, **kwargs):
 		email = email.lower()
 		try:
 			cls.select().where(
 				(cls.email==email)
 			).get()
 		except cls.DoesNotExist:
-			user = cls(username=username, email=email)
+			users = cls(username=username, email=email)
 
-			user.password = generate_password_hash(password)
-			user.save()
-			return user
+			users.password = generate_password_hash(password)
+			users.save()
+			return users
 		else:
 			raise Exception('user with that email already exists')
 
@@ -79,5 +77,5 @@ class Comment(Model):
 
 def initialize():
 	DATABASE.connect()
-	DATABASE.create_tables([User], safe=True)
+	DATABASE.create_tables([User, Restaurant, Comment], safe=True)
 	DATABASE.close()
