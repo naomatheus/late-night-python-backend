@@ -8,7 +8,6 @@ user_fields = {
 	'username': fields.String,
 	'password': fields.String,
 	'email': fields.String
-	## not sure about fields."" entry
 }
 
 class UserList(Resource):
@@ -84,9 +83,8 @@ class User(Resource):
 			)
 		super().__init__()
 
-	@marshal_with(user_fields)
+	# @marshal_with(user_fields)
 	def get(self,id):
-
 		try: 
 			user = models.User.get(models.User.id==id)
 		except models.User.DoesNotExist:
@@ -94,9 +92,8 @@ class User(Resource):
 		else:
 			return (user, 200)
 
-	@marshal_with(user_fields)
+	# @marshal_with(user_fields)
 	def get(self,id):
-
 		try:
 			print(current_user,'<----- CURRENT USER ')
 			logged_out_user = models.User.get(models.User.id==id)
@@ -106,6 +103,13 @@ class User(Resource):
 			abort(404)
 		else:
 			return (logged_out_user, 200)
+
+	# def post(self, id):
+	# 	args = self.reqparse.parse_args()
+	# 	if args['password'] == args['verify_password']:
+	# 		print(args, ' this is args')
+	# 		user = models.User.create_user(**args)
+	# 		login_user(user)
 
 
 
@@ -118,19 +122,15 @@ api = Api(users_api)
 api.add_resource(
 	UserList,
 	'/registration',
-	endpoint='users'
 )
 
 api.add_resource(
 	User,
 	'/logout',
-	# logout a user
-	endpoint='logout'
-	)
+)
+
 
 # api.add_resource(
 # 	User,
-# 	'/<int:id>/logout>',
-# 	# logout user by id
-# 	endpoint='users'
+# 	'/login',
 # )

@@ -13,7 +13,7 @@ import config
 
 restaurant_fields = {
 	'name': fields.String,
-	'address': fields.String,
+	'vicinity': fields.String,
 	'place_id': fields.String
 }
 
@@ -65,39 +65,45 @@ class RestaurantList(Resource):
 			)
 		super().__init__()
 
+	@marshal_with(restaurant_fields)
 	def get(self):
-		resp = requests.get('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=41.8781,-87.6298&radius=5000&type=restaurant&keyword=open&keyword=late&key=AIzaSyDchPWjgowvaycrHzTZj44OEMBLdmt6584')
-
+		resp = requests.get(config.API_URL + config.API_KEY)
+		json_response = resp.json()
 		if resp.status_code != 200:
 			raise ApiError('GET /restaurants/{}'.format(resp.status_code))
 		else:	
-			json_response = resp.json()
+			getRestaurantsResponse = resp.json()
 			
 
 			print(type(json_response),'<-- this is the type of the json_response')
 			
 			## save the whole obj as a var			
-			# restaurantsData = list(json_response.values())[2]
-
-			# for k, v in enumerate(restaurantsData):
-			# 	# restaurantData = {}
-			# 	print(k,v)
-			# 	print(v["name"])
-			# 	print(v["place_id"])
-			# 	print(v["vicinity"])
-			# 	restaurantData = dict(
-			# 			name=v["name"],
-			# 			place_id=v["place_id"],
-			# 			vicinity=v["vicinity"]
-			# 		)
-			# 	print(restaurantData)
-			# restaurantData = restaurantsData["name"]["place_id"]["vicinity"]
+			restaurantsData = list(json_response.values())[2]
+			allRestaurants = []
+			restaurantData = {}
+			for k, v in enumerate(restaurantsData):
+				print(k,v,'==================================================')
+				print(v["name"])
+				print(v["place_id"])
+				print(v["vicinity"])
+				restaurantData = dict(
+						name=v["name"],
+						place_id=v["place_id"],
+						vicinity=v["vicinity"]
+					)
+				allRestaurants.append(restaurantData)
+				# print(restaurantsData)
+			# restaurantData = restaurantsData[4][7][15]
 
 			## create a dictionary with those properties and send over to the client
 
 			## now change this route to look at the same k and v for all of the returned restaurant values 
 			
-		return json_response, 'this is restaurantData'
+		# return getRestaurantsResponse
+		# print('START')
+		print(allRestaurants,'==============================')
+		# print('END')
+		return allRestaurants
 
 class Restaurant(Resource):
 	def __init__(self):
