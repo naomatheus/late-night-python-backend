@@ -4,14 +4,14 @@ import config
 
 from peewee import *
 
-DATABASE = PostgresqlDatabase('late_night', user='clayton',password=config.SQL_PASSWORD)
-
+DATABASE = PostgresqlDatabase('late_night_python', user='matt',password=config.SQL_PASSWORD)
 
 
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 
 class User(UserMixin, Model):
+	id SERIAL PRIMARY KEY
 	username=CharField()
 	password=CharField()
 	email=CharField()
@@ -41,6 +41,7 @@ class User(UserMixin, Model):
 
 
 class Restaurant(Model):
+	id SERIAL PRIMARY KEY
 	name=CharField()
 	address=CharField()
 	place_id=CharField()
@@ -65,6 +66,7 @@ class Restaurant(Model):
 
 
 class Comment(Model):
+	id SERIAL PRIMARY KEY
 	comment_author=ForeignKeyField(User)
 	comment_body=CharField()
 	place_id=ForeignKeyField(Restaurant)

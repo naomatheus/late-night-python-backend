@@ -119,7 +119,7 @@ api.add_resource(
 	UserList,
 	'/registration',
 	endpoint='users'
-)
+)	
 
 api.add_resource(
 	User,
