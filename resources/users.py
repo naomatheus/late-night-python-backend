@@ -123,12 +123,10 @@ api = Api(users_api)
 api.add_resource(
 	UserList,
 	'/registration',
-<<<<<<< HEAD
 	endpoint='users'
 )	
-=======
-)
->>>>>>> 81ef2648731877fbcc5badca45b7e6d02c95242c
+
+
 
 api.add_resource(
 	User,
