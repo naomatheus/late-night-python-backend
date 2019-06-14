@@ -32,24 +32,25 @@ class UserList(Resource):
 			help='No email provided',
 			location=['form', 'json']
 		)
-		self.reqparse.add_argument(
-			'verify_password',
-			required=True,
-			help='No password verification provided',
-			location=['form', 'json']
-			)
+		# self.reqparse.add_argument(
+		# 	'verify_password',
+		# 	required=True,
+		# 	help='No password verification provided',
+		# 	location=['form', 'json']
+		# 	)
 		super().__init__()
 
 
 	def post(self):
 		args = self.reqparse.parse_args()
 		print((args), 'arguments to form body')
-		if args['password'] == args['verify_password']:
-			print(args, 'arguments to form body')
-			user = models.User.create(**args)
+		# if args['password'] == args['verify_password']:
+		# 	print(args, 'arguments to form body')
+		user = models.User.create(**args)
 
-			login_user(user)
-			return marshal(user, user_fields), 201
+		login_user(user)
+		return marshal(user, user_fields), 201
+		
 		return make_response(
 			json.dumps({
 				'error': 'Password and password verificaiton do not match'
@@ -76,15 +77,15 @@ class User(Resource):
 			help='No email provided',
 			location=['form', 'json']
 		)
-		self.reqparse.add_argument(
-			'verify_password',
-			required=True,
-			help='No pasword verification provided',
-			location=['form', 'json']
-			)
+		# self.reqparse.add_argument(
+		# 	'verify_password',
+		# 	required=True,
+		# 	help='No pasword verification provided',
+		# 	location=['form', 'json']
+		# 	)
 		super().__init__()
 
-	# @marshal_with(user_fields)
+	@marshal_with(user_fields)
 	def get(self,id):
 		try: 
 			user = models.User.get(models.User.id==id)
@@ -93,7 +94,7 @@ class User(Resource):
 		else:
 			return (user, 200)
 
-	# @marshal_with(user_fields)
+	@marshal_with(user_fields)
 	def get(self,id):
 		try:
 			print(current_user,'<----- CURRENT USER ')
@@ -122,8 +123,8 @@ api = Api(users_api)
 
 api.add_resource(
 	UserList,
-	'/registration',
-	endpoint='users'
+	'/register',
+	endpoint='auth'
 )	
 
 
