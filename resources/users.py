@@ -5,6 +5,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 import models
 
 user_fields = {
+	'id': fields.Integer,
 	'username': fields.String,
 	'password': fields.String,
 	'email': fields.String
@@ -35,7 +36,7 @@ class UserList(Resource):
 		self.reqparse.add_argument(
 			'verify_password',
 			required=True,
-			help='No pasword verification provided',
+			help='No password verification provided',
 			location=['form', 'json']
 			)
 		super().__init__()
@@ -119,13 +120,20 @@ api.add_resource(
 	UserList,
 	'/registration',
 	endpoint='users'
-)
+)	
 
 api.add_resource(
 	User,
 	'/logout',
 	# logout a user
 	endpoint='logout'
+	)
+
+api.add_resource(
+	User,
+	'/login',
+	# login a user
+	endpoint='login'
 	)
 
 # api.add_resource(
