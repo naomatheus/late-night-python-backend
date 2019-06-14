@@ -11,7 +11,7 @@ from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 
 class User(UserMixin, Model):
-	id=PrimaryKeyField(null=False, default=0)
+	id=PrimaryKeyField(null=False)
 	username=CharField()
 	password=CharField()
 	email=CharField()
@@ -41,7 +41,7 @@ class User(UserMixin, Model):
 
 
 class Restaurant(Model):
-	id=PrimaryKeyField(null=False, default=0)
+	id=PrimaryKeyField(null=False)
 	name=CharField()
 	address=CharField()
 	place_id=CharField()
@@ -66,12 +66,10 @@ class Restaurant(Model):
 
 
 class Comment(Model):
-	id=PrimaryKeyField(null=False, default=0)
+	id=PrimaryKeyField(null=False)
 	comment_author=ForeignKeyField(User)
 	comment_body=CharField()
 	place_id=ForeignKeyField(Restaurant)
-
-
 
 
 	class Meta:
