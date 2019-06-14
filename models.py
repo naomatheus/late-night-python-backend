@@ -4,14 +4,14 @@ import config
 
 from peewee import *
 
-DATABASE = PostgresqlDatabase('late_night', user='clayton',password=config.SQL_PASSWORD)
-
+DATABASE = PostgresqlDatabase('late_night_python', user='clayton', password=config.SQL_PASSWORD)
 
 
 from flask_bcrypt import generate_password_hash
 from flask_login import UserMixin
 
 class User(UserMixin, Model):
+	id=PrimaryKeyField(null=False)
 	username=CharField()
 	password=CharField()
 	email=CharField()
@@ -38,9 +38,8 @@ class User(UserMixin, Model):
 		else:
 			raise Exception('user with that email already exists')
 
-
-
 class Restaurant(Model):
+	user_id=ForeignKeyField(User, related_name='user')
 	name=CharField()
 	address=CharField()
 	place_id=CharField()
@@ -51,7 +50,7 @@ class Restaurant(Model):
 		database=DATABASE
 
 	@classmethod
-	def create_restaurant(cls, name, address, place_id, **kwargs):
+	def create_restaurant(cls, user_id, name, address, place_id, **kwargs):
 		try:
 			cls.select().where(
 				(cls.place_id==place_id)
@@ -65,6 +64,7 @@ class Restaurant(Model):
 
 
 class Comment(Model):
+	user_id=ForeignKeyField(User, related_name='user')
 	comment_author=ForeignKeyField(User)
 	comment_body=CharField()
 	place_id=ForeignKeyField(Restaurant)
