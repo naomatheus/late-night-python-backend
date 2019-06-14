@@ -14,8 +14,8 @@ import config
 
 comment_fields = {
 #### also need the foreign key here which is the place_id of the restaurants
-	'commentBody': fields.String,
-	'commentAuthor': fields.String,
+	'comment_body': fields.String,
+	'comment_author_id': fields.String,
 	'place_id': fields.String
 }
 
@@ -29,24 +29,24 @@ class Comment(Resource):
 			location=['form', 'json']
 			)
 		self.reqparse.add_argument(
-			'comment_author',
+			'comment_author_id',
 			required=False,
 			help='No commentAuthor provided',
 			location=['form', 'json']
 			)
 		super().__init__()
 
-	@marshal_with(comment_fields)
+	# @marshal_with(comment_fields)
 	def post(self):
-		# if g.user._get_current_object():
-			# print(g.user._get_current_object())
+		if g.user._get_current_object():
+			print(g.user._get_current_object())
 		args = self.reqparse.parse_args()
 		print(args, '<===(req.body)')
 		comment = models.Comment.create(comment_author=g.user._get_current_object(),**args)
 		print(comment, '<===', type(comment))
 		return (comment, 201)
 
-	@marshal_with(comment_fields)
+	# @marshal_with(comment_fields)
 	def put(self):
 		args = self.reqparse.parse_args()
 		print(args, '<===(req.body)')
@@ -54,7 +54,7 @@ class Comment(Resource):
 		print(updated_comment, '<===(req.body)', type(comment))
 		return (comment, 201)
 
-	@marshal_with(comment_fields)
+	# @marshal_with(comment_fields)
 	def delete(self):
 		comment_to_delete = models.Comment.delete()
 		print(comment_to_delete, '<=== comment will be deleted', type(comment))
