@@ -27,11 +27,11 @@ def load_user(userid):
 	except models.DoesNotExist:
 		return None
 
-CORS(users_api, origin=['http://localhost:8000'], supports_credentials=True)
-CORS(restaurants_api, origin=['http://localhost:8000'], supports_credentials=True)
-CORS(comments_api, origin=['http://localhost:8000'], supports_credentials=True,allow_headers='*')
+CORS(users_api, origin=['http://localhost:3000','http://localhost:8000'], supports_credentials=True, allow_headers='*')
+CORS(restaurants_api, origin=['http://localhost:3000','http://localhost:8000'], supports_credentials=True, allow_headers='*')
+CORS(comments_api, origin=['http://localhost:3000', 'http://localhost:8000'], supports_credentials=True,allow_headers='*')
 
-app.register_blueprint(users_api, url_prefix='/users')
+app.register_blueprint(users_api, url_prefix='/auth')
 app.register_blueprint(restaurants_api, url_prefix='/restaurants')
 app.register_blueprint(comments_api, url_prefix='/restaurants/')
 

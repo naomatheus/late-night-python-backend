@@ -4,4 +4,12 @@ late-night.sqlite
 
 config.py
 
-__pycach__
+__pycache__
+
+__pycache__/__pycache__
+
+__pycache__/models.cpython-37.pyc
+
+resources/__pycache__
+
+resources/__pycache__/models.cpython-37.pyc

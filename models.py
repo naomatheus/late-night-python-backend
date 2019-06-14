@@ -40,6 +40,7 @@ class User(UserMixin, Model):
 
 class Restaurant(Model):
 	user_id=ForeignKeyField(User, related_name='user')
+	id=PrimaryKeyField(null=False)
 	name=CharField()
 	address=CharField()
 	place_id=CharField()
@@ -65,11 +66,10 @@ class Restaurant(Model):
 
 class Comment(Model):
 	user_id=ForeignKeyField(User, related_name='user')
+	id=PrimaryKeyField(null=False)
 	comment_author=ForeignKeyField(User)
 	comment_body=CharField()
 	place_id=ForeignKeyField(Restaurant)
-
-
 
 
 	class Meta:
