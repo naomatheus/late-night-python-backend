@@ -13,7 +13,7 @@ import config
 
 restaurant_fields = {
 	'name': fields.String,
-	'vicinity': fields.String,
+	'address': fields.String,
 	'place_id': fields.String
 }
 
@@ -86,7 +86,7 @@ class RestaurantList(Resource):
 				restaurantData = dict(
 						name=v["name"],
 						place_id=v["place_id"],
-						vicinity=v["vicinity"]
+						address=v["vicinity"]
 					)
 				allRestaurants.append(restaurantData)
 				# print(restaurantsData)
@@ -138,7 +138,7 @@ class Restaurant(Resource):
 		else:
 			oneRestaurant = resp.json()
 		print(oneRestaurant,'<-- this is one restaurant')
-		
+
 		return oneRestaurant
 
 	# @app.route('/<string:place_id>/comment',methods=['GET'])
@@ -196,8 +196,7 @@ api.add_resource(
 )
 api.add_resource(
     Restaurant,
-    '/restaurants/<string:place_id>',
-    endpoint='restaurant'
+    '/restaurants/<string:place_id>'
 )
 # comment_api.add_resource(
 # 	Comment,
