@@ -12,7 +12,7 @@ from flask_login import UserMixin
 
 class User(UserMixin, Model):
 	id=PrimaryKeyField(null=False)
-	username=CharField()
+	userName=CharField()
 	password=CharField()
 	email=CharField()
 	# not sure if email/pw need to be required
@@ -23,14 +23,14 @@ class User(UserMixin, Model):
 		database=DATABASE
 
 	@classmethod
-	def create_users(cls, username, email, password, **kwargs):
+	def create_users(cls, userName, email, password, **kwargs):
 		email = email.lower()
 		try:
 			cls.select().where(
 				(cls.email==email)
 			).get()
 		except cls.DoesNotExist:
-			users = cls(username=username, email=email)
+			users = cls(userName=userName, email=email)
 
 			users.password = generate_password_hash(password)
 			users.save()

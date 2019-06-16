@@ -1,5 +1,7 @@
 import json
+
 from flask import Flask, jsonify, Blueprint, abort, make_response, g
+
 from flask_restful import (Resource, Api, reqparse, inputs, fields, marshal, marshal_with, url_for)
 
 from flask_login import current_user
@@ -14,8 +16,8 @@ import config
 
 comment_fields = {
 #### also need the foreign key here which is the place_id of the restaurants
-	'comment_body': fields.String,
-	'comment_author_id': fields.String,
+	'commentBody': fields.String,
+	'commentAuthor': fields.String,
 	'place_id': fields.String
 }
 
@@ -23,13 +25,13 @@ class Comment(Resource):
 	def __init__(self):
 		self.reqparse = reqparse.RequestParser()
 		self.reqparse.add_argument(
-			'comment_body',
+			'commentBody',
 			required=False,
 			help='No commentBody provided',
 			location=['form', 'json']
 			)
 		self.reqparse.add_argument(
-			'comment_author_id',
+			'commentAuthor',
 			required=False,
 			help='No commentAuthor provided',
 			location=['form', 'json']
