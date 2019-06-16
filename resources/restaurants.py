@@ -18,25 +18,25 @@ restaurant_fields = {
 }
 
 comment_fields = {
-#### also need the foreign key here which is the place_id of the restaurants
+#### also need the foreign key here which is the user_id of the restaurants
 	'place_id': fields.Integer,
-	'comment_body': fields.String,
-	'comment_author': fields.Integer
+	'commentBody': fields.String,
+	'commentAuthor': fields.Integer
 }
 
 class Comment(Resource):
 	def __init__(self):
 		self.reqparse = reqparse.RequestParser()
 		self.reqparse.add_argument(
-			'comment_body',
+			'commentBody',
 			required=False,
-			help='No comment_body provided',
+			help='No comment body provided',
 			location=['form', 'json']
 			)
 		self.reqparse.add_argument(
-			'comment_author',
+			'commentAuthor',
 			required=False,
-			help='No comment_author provided',
+			help='No comment author provided',
 			location=['form', 'json']
 			)		
 		super().__init__()
@@ -71,12 +71,9 @@ class RestaurantList(Resource):
 		json_response = resp.json()
 		if resp.status_code != 200:
 			raise ApiError('GET /restaurants/{}'.format(resp.status_code))
-		else:	
-			getRestaurantsResponse = resp.json()
-			
-
+		else:
+			getRestaurantsResponse = resp.json()			
 			print(type(json_response),'<-- this is the type of the json_response')
-			
 			## save the whole obj as a var			
 			restaurantsData = list(json_response.values())[2]
 			allRestaurants = []
@@ -93,17 +90,17 @@ class RestaurantList(Resource):
 					)
 				allRestaurants.append(restaurantData)
 				# print(restaurantsData)
-			# restaurantData = restaurantsData[4][7][15]
+				# restaurantData = restaurantsData[4][7][15]
 
 			## create a dictionary with those properties and send over to the client
 
 			## now change this route to look at the same k and v for all of the returned restaurant values 
 			
 		# return getRestaurantsResponse
-		# print('START')
+		print('START')
 		print(allRestaurants,'==============================')
-		# print('END')
 		return allRestaurants
+		print('END')
 
 class Restaurant(Resource):
 	def __init__(self):
@@ -195,12 +192,11 @@ api = Api(restaurants_api)
 # comment_api = Api(comments_api)
 api.add_resource(
 	RestaurantList,
-	'/restaurants',
-	endpoint='restaurants'
+	'/'
 )
 api.add_resource(
     Restaurant,
-    '/restaurant/<string:place_id>',
+    '/restaurants/<string:place_id>',
     endpoint='restaurant'
 )
 # comment_api.add_resource(

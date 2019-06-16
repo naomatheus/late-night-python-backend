@@ -77,8 +77,6 @@ class User(Resource):
 		try:
 			user = models.User.get(models.User.userName==args.userName)
 			print(user)
-			# g.user._get_current_object().id
-			# print('this is the user id', User.id)
 		except models.User.DoesNotExist:
 			abort(404)
 		else:
@@ -94,14 +92,6 @@ class User(Resource):
 			abort(404)
 		else:
 			return (logged_out_user, 200)
-
-	# @marshal_with(user_fields)
-	# def post(self, id):
-	# 	args = self.reqparse.parse_args()
-	# 	if args['password'] == form['password']:
-	# 		print(args, ' this is args')
-	# 		user = models.User.create_user(**args)
-	# 		login_user(user)
 
 
 
