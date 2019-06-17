@@ -5,8 +5,6 @@ from flask_restful import (Resource, Api, reqparse, inputs, fields, marshal, mar
 
 import requests
 
-
-
 import models
 
 import config
@@ -19,7 +17,7 @@ restaurant_fields = {
 
 comment_fields = {
 #### also need the foreign key here which is the user_id of the restaurants
-	'place_id': fields.Integer,
+	'place_id': fields.String,
 	'commentBody': fields.String,
 	'commentAuthor': fields.Integer
 }
@@ -38,7 +36,7 @@ class Comment(Resource):
 			required=False,
 			help='No comment author provided',
 			location=['form', 'json']
-			)		
+			)	
 		super().__init__()
 
 
@@ -62,6 +60,10 @@ class RestaurantList(Resource):
 			required=False,
 			help='No restaurant place_id provided',
 			location=['json']
+			)
+		self.reqparse.add_argument(
+			'location',
+			required=False,
 			)
 		super().__init__()
 
@@ -97,10 +99,24 @@ class RestaurantList(Resource):
 			## now change this route to look at the same k and v for all of the returned restaurant values 
 			
 		# return getRestaurantsResponse
-		print('START')
-		print(allRestaurants,'==============================')
+		print('START==============================')
+		print(allRestaurants)
+		print('END==============================')
 		return allRestaurants
-		print('END')
+
+	def get(self):
+		# ip_address = request.access_route[0] or request.remote_addr
+  #   	geodata = get_geodata(ip_address)
+  #   	location = "{}, {}".format(geodata.get("latitude"),geodata.get("longitude"))
+  #   	print(location)
+		print('HITTING ROUTE??')
+		resp = requests.get(config.API_URL + config.API_KEY)
+		json_response = resp.json()
+		if resp.status_code != 200:
+			raise ApiError('GET /restaurants/nearby{}'.format(resp.status_code))
+		else: 
+			getRestaurantsResponse=resp.json()
+			print(type(json_response),'<-- this is the type of the json_response')
 
 class Restaurant(Resource):
 	def __init__(self):
@@ -111,25 +127,22 @@ class Restaurant(Resource):
 			help='No restaurant name provided',
 			location=['form', 'json']
 			)
-
 		self.reqparse.add_argument(
 			'address',
 			required=False,
 			help='No restaurant address provided',
 			location=['form', 'json']
 			)
-
 		self.reqparse.add_argument(
 			'place_id',
 			required=False,
 			help='No restaurant place_id provided',
 			location=['form', 'json']
 			)
-
 		super().__init__()
 
 	def get(self, place_id):
-		resp = requests.get('https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&fields=name,formatted_address,place_id&key=AIzaSyDchPWjgowvaycrHzTZj44OEMBLdmt6584')
+		resp = requests.get('https://maps.googleapis.com/maps/api/place/details/json?placeid=' + place_id + '&fields=name,formatted_address,place_id&key' + config.API_KEY)
 		print(resp,'<-- this is response in the second get restaurant call')
 
 		if resp.status_code != 200:
@@ -194,9 +207,14 @@ api.add_resource(
 	RestaurantList,
 	'/'
 )
+# api.add_resource(
+# 	RestaurantList,
+# 	'/',
+# 	endpoint='nearby?searchTerm=<integer:location>'
+# )
 api.add_resource(
     Restaurant,
-    '/restaurants/<string:place_id>'
+    '/<string:place_id>'
 )
 # comment_api.add_resource(
 # 	Comment,

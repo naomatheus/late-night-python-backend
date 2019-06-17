@@ -31,7 +31,6 @@ class User(UserMixin, Model):
 			).get()
 		except cls.DoesNotExist:
 			users = cls(userName=userName, email=email)
-
 			users.password = generate_password_hash(password)
 			users.save()
 			return users

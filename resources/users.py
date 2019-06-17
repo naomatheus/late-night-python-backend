@@ -7,7 +7,7 @@ import models
 user_fields = {
 	'userName': fields.String,
 	'password': fields.String,
-	'email': fields.String,
+	'email': fields.String
 }
 
 class UserList(Resource):
@@ -33,16 +33,24 @@ class UserList(Resource):
 		)
 		super().__init__()
 
-
+	@marshal_with(user_fields)
 	def post(self):
 		args = self.reqparse.parse_args()
 		print((args), 'arguments to form body')
 		if args['password'] == args['password']:
-		# if args['password'] == args['verify_password']:
 			print(args, '<==== arguments to form body')
 			user = models.User.create(**args)
 			login_user(user)
-			return marshal(user, user_fields), 201
+			return marshal(user, user_fields), make_response(
+				json.dumps({
+					'data': user,
+					'success': True
+					}, 201)
+			)
+			# return marshal(user, user_fields), make_response(
+			# 	json.dumps({
+			# 		'success': True
+			# 		}), 200)
 		return make_response(
 			json.dumps({
 				'error': 'Password invalid'
@@ -75,23 +83,23 @@ class User(Resource):
 	def post(self):
 		args = self.reqparse.parse_args()
 		try:
-			user = models.User.get(models.User.userName==args.userName)
-			print(user)
+			logged_in_user = models.User.get(models.User.userName==args.userName)
+			print(logged_in_user)
 		except models.User.DoesNotExist:
 			abort(404)
 		else:
-			return (user, 200)
+			return (logged_in_user, 201)
 
 	@marshal_with(user_fields)
 	def get(self):
 		try:
 			print(current_user,'<----- CURRENT USER ')
-			logged_out_user = models.User.get(models.User.id==id)
+			logged_out_user=current_user
 			logout_user(logged_out_user)
 		except models.User.DoesNotExist:
 			abort(404)
 		else:
-			return (logged_out_user, 200)
+			return (logged_out_user, 201)
 
 
 
@@ -103,17 +111,16 @@ api = Api(users_api)
 
 api.add_resource(
 	UserList,
-	'/register'
+	'/register/'
 )
 
 api.add_resource(
 	User,
-	'/logout'
+	'/logout/'
 )
-
 
 api.add_resource(
 	User,
-	'/login',
+	'/login/',
 	endpoint='auth'
 )
