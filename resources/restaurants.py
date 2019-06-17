@@ -61,10 +61,6 @@ class RestaurantList(Resource):
 			help='No restaurant place_id provided',
 			location=['json']
 			)
-		self.reqparse.add_argument(
-			'location',
-			required=False,
-			)
 		super().__init__()
 
 	@marshal_with(restaurant_fields)
@@ -104,19 +100,20 @@ class RestaurantList(Resource):
 		print('END==============================')
 		return allRestaurants
 
-	def get(self):
-		# ip_address = request.access_route[0] or request.remote_addr
-  #   	geodata = get_geodata(ip_address)
-  #   	location = "{}, {}".format(geodata.get("latitude"),geodata.get("longitude"))
-  #   	print(location)
-		print('HITTING ROUTE??')
-		resp = requests.get(config.API_URL + config.API_KEY)
-		json_response = resp.json()
-		if resp.status_code != 200:
-			raise ApiError('GET /restaurants/nearby{}'.format(resp.status_code))
-		else: 
-			getRestaurantsResponse=resp.json()
-			print(type(json_response),'<-- this is the type of the json_response')
+# HERE I WAS ATTEMPTING TO DO THE API CALL VIA GEOLOCATION... HASN'T WORKED YET
+	# def get(self):
+	# 	ip_address = request.access_route[0] or request.remote_addr
+ #    	geodata = get_geodata(ip_address)
+ #    	location = "{}, {}".format(geodata.get("latitude"),geodata.get("longitude"))
+ #    	print(location)
+	# 	print('HITTING ROUTE??')
+	# 	resp = requests.get(config.API_URL + config.API_KEY)
+	# 	json_response = resp.json()
+	# 	if resp.status_code != 200:
+	# 		raise ApiError('GET /restaurants/nearby{}'.format(resp.status_code))
+	# 	else: 
+	# 		getRestaurantsResponse=resp.json()
+	# 		print(type(json_response),'<-- this is the type of the json_response')
 
 class Restaurant(Resource):
 	def __init__(self):
@@ -158,20 +155,19 @@ class Restaurant(Resource):
 
 	@marshal_with(restaurant_fields)
 	def post(self, place_id):
-		# print(reqparse.parse_args)
 		args = self.reqparse.parse_args()
-		# foundRestaurant = models.Restaurant.select(**args)
-		# print(foundRestaurant)
-		# print(g.user._get_current_object())
-		# if foundRestaurant:
-		print(args, '<==== args (req.body')
-		restaurant = models.Restaurant.create(**args)
-		print(restaurant, '<===', type(restaurant))
-		# models.Restaurant.create(**args)
-		# elif foundRestaurant:
-		# 	if g.user._get_current_object():
-		# 		if foundRestaurant.place_id == place_id:
-		return (restaurant, 201)
+		foundRestaurant = models.Restaurant.select(**args)
+		print(foundRestaurant)
+		print(g.user._get_current_object())
+		if foundRestaurant:
+			print(args, '<==== args (req.body')
+			restaurant = models.Restaurant.create(**args)
+			print(restaurant, '<===', type(restaurant))
+			models.Restaurant.create(**args)
+		elif foundRestaurant:
+			if g.user._get_current_object():
+				if foundRestaurant.place_id == place_id:
+					return (restaurant, 201)
 
 	### POST restaurants/place_id/comment
 		##1.) when route hit - checks DB for existing restaurant 
@@ -207,15 +203,18 @@ api.add_resource(
 	RestaurantList,
 	'/'
 )
+
+api.add_resource(
+    Restaurant,
+    '/<string:place_id>'
+)
+
 # api.add_resource(
 # 	RestaurantList,
 # 	'/',
 # 	endpoint='nearby?searchTerm=<integer:location>'
 # )
-api.add_resource(
-    Restaurant,
-    '/<string:place_id>'
-)
+
 # comment_api.add_resource(
 # 	Comment,
 # 	'<string:place_id>/comment',

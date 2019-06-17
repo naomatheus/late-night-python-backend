@@ -41,19 +41,14 @@ class UserList(Resource):
 			print(args, '<==== arguments to form body')
 			user = models.User.create(**args)
 			login_user(user)
-			return marshal(user, user_fields), make_response(
-				json.dumps({
-					'data': user,
-					'success': True
-					}, 201)
-			)
+			return marshal(user, user_fields)
 			# return marshal(user, user_fields), make_response(
 			# 	json.dumps({
 			# 		'success': True
 			# 		}), 200)
 		return make_response(
 			json.dumps({
-				'error': 'Password invalid'
+				'error': 'username taken '
 				}), 400)
 
 class User(Resource):
@@ -95,7 +90,7 @@ class User(Resource):
 		try:
 			print(current_user,'<----- CURRENT USER ')
 			logged_out_user=current_user
-			logout_user(logged_out_user)
+			logout_user()
 		except models.User.DoesNotExist:
 			abort(404)
 		else:
