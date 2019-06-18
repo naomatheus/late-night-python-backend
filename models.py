@@ -15,7 +15,6 @@ class User(UserMixin, Model):
 	userName=CharField()
 	password=CharField()
 	email=CharField()
-	# not sure if email/pw need to be required
 
 # DO NOT NEED A COMMENTS MADE OR COMMENT ID HERE
 
@@ -38,8 +37,8 @@ class User(UserMixin, Model):
 			raise Exception('user with that email already exists')
 
 class Restaurant(Model):
-	user_id=ForeignKeyField(User, related_name='user')
 	id=PrimaryKeyField(null=False)
+	user_id=ForeignKeyField(User, related_name='user')
 	name=CharField()
 	address=CharField()
 	place_id=CharField()
@@ -64,15 +63,28 @@ class Restaurant(Model):
 
 
 class Comment(Model):
-	user_id=ForeignKeyField(User, related_name='user')
 	id=PrimaryKeyField(null=False)
-	comment_author=ForeignKeyField(User)
-	comment_body=CharField()
-	place_id=ForeignKeyField(Restaurant)
+	comment_author_id=ForeignKeyField(User, related_name='user')
+	commentBody=CharField()
+	# restaurant_name=ForeignKeyField(Restaurant, related_name='restaurant')
+	restaurant_id=ForeignKeyField(Restaurant, related_name='restaurant')
 
 
 	class Meta:
 		database=DATABASE
+
+	@classmethod
+	def create_comment(cls, commentAuthor, commentBody, place_id, restaurant_name, **kwargs):
+		try:
+			cls.select().where(
+				(cls.user_id==user_id)
+			).get()
+		except cls.DoesNotExist:
+			comment = cls(commentAuthor=commentAuthor, commentBody=commentBody)
+			comment.save()
+			return comment
+		else:
+			raise Exception('could not find comment')
 
 def initialize():
 	DATABASE.connect()

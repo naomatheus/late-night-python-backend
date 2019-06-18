@@ -45,13 +45,9 @@ def before_request():
 
 @app.after_request
 def after_request(response):
-	"""Close connection to DB after each rq"""
+	"""Close connection to DB after each request"""
 	g.db.close()
 	return response
-
-# @app.route('/test')
-# def get_data():
-# 	return requests.get(config.API_URL + API_KEY).content
 
 
 @app.route('/')

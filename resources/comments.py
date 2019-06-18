@@ -15,9 +15,8 @@ import models
 import config
 
 comment_fields = {
-#### also need the foreign key here which is the place_id of the restaurants
 	'commentBody': fields.String,
-	'commentAuthor': fields.String,
+	'comment_author_id': fields.String,
 	'place_id': fields.String
 }
 
@@ -31,10 +30,16 @@ class Comment(Resource):
 			location=['form', 'json']
 			)
 		self.reqparse.add_argument(
-			'commentAuthor',
+			'comment_author_id',
 			required=False,
 			help='No commentAuthor provided',
-			location=['form', 'json']
+			location='json'
+			)
+		self.reqparse.add_argument(
+			'place_id',
+			required=False,
+			help='No place_id provided',
+			location='json'
 			)
 		super().__init__()
 

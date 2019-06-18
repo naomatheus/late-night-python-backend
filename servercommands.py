@@ -1,35 +1,51 @@
-# virtualenv .env -p python3
+### ROUTES ###
+#  get auth/logout - ERRORS
+#  post auth/register - WORKS
+#  post auth/login - WORKS
+#  get auth/usercomments - WORKS (INCOMPLETE)
 
-# source .env/bin/activate
+#  get comment/restaurants/:place_id - DEVELOPMENT
+#  put comment/restaurants/:place_id/edit/:comment_id - NOT IN DEV
+#  delete comment/restaurants/:place_id/:comment_id - NOT IN DEV
 
-# pip3 install flask-restful peewee flask psycopg2 flask_login flask_cors
+#  get restaurants/nearby/ - FINISHED
+#  post restaurants/:place_id/comment - DEVELOPMENT
 
-# GetUserComents class
-# class GetUserComments(Resource):
-# 	def __init__(self):
-# 		self.reqparse = reqparse.RequestParser()
-# 		self.reqparse.add_argument(
-# 			'commentAuthor',
-# 			required=True,
-# 			help='no comment author provided',
-# 			location='form'
-# 		)
-# 		self.reqparse.add_argument(
-# 			'commentBody',
-# 			required=True,
-# 			help='no comment body provided',
-# 			location='json'
-# 		)
-# 		self.reqparse.add_argument(
-# 			'restaurant_name',
-# 			required=True,
-# 			help='no restaurant name provided',
-# 			location='json'
-# 		)
-# 		self.reqparse.add_argument(
-# 			'restaurant_id',
-# 			required=True,
-# 			help='no restaurant id provided',
-# 			location='json'
-# 		)
-# 		super().__init__()
+
+
+
+
+
+
+
+
+# ///this route returns all comments made by a user's session///
+# router.get('/usercomments', async (req, res, next) => {
+#     try{
+#         if (req.session.logged === true){
+
+#             const foundUser = await User.findOne({userName: req.session.userName})
+#             if (foundUser){
+#                 const foundRestaurants = await Restaurant.find({userName: req.session.userName}).populate('comments');
+#                 const foundComments = await Comment.find({commentAuthor: req.session.userName})
+#                 res.json({
+#                     status: 200,
+#                     data: foundRestaurants, foundComments
+#                 });
+#             } else {
+#                 res.json({
+#                     status: 400,
+#                     data: 'no data found'
+#                 });
+#             }
+#         } else {
+#             res.json({
+#                 status: 400,
+#                 data: 'no user session found'
+#             })
+#         }
+#     }catch(err){
+#         console.error(err);
+#         next(err);
+#     }
+# });
