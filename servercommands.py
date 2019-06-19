@@ -1,23 +1,15 @@
 ### ROUTES ###
-#  get auth/logout - ERRORS
-#  post auth/register - WORKS
-#  post auth/login - WORKS
-#  get auth/usercomments - WORKS (INCOMPLETE)
+#  get auth/logout - FINISHED
+#  post auth/register - WORKS WITH ERRORS (creates user but does NOT redirect to login)
+#  post auth/login - FINISHED
+#  get auth/usercomments - DEVELOPMENT (INCOMPLETE)
 
 #  get comment/restaurants/:place_id - DEVELOPMENT
-#  put comment/restaurants/:place_id/edit/:comment_id - NOT IN DEV
-#  delete comment/restaurants/:place_id/:comment_id - NOT IN DEV
+#  put comment/restaurants/:place_id/edit/:comment_id - DEVELOPMENT
+#  delete comment/restaurants/:place_id/:comment_id - DEVELOPMENT
 
 #  get restaurants/nearby/ - FINISHED
-#  post restaurants/:place_id/comment - DEVELOPMENT
-
-
-
-
-
-
-
-
+#  post restaurants/:place_id/comment - DEVELOPMENT - hits route - doesn't C yet
 
 # ///this route returns all comments made by a user's session///
 # router.get('/usercomments', async (req, res, next) => {

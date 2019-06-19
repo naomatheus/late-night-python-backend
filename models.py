@@ -66,7 +66,6 @@ class Comment(Model):
 	id=PrimaryKeyField(null=False)
 	comment_author_id=ForeignKeyField(User, related_name='user')
 	commentBody=CharField()
-	# restaurant_name=ForeignKeyField(Restaurant, related_name='restaurant')
 	restaurant_id=ForeignKeyField(Restaurant, related_name='restaurant')
 
 
@@ -74,7 +73,7 @@ class Comment(Model):
 		database=DATABASE
 
 	@classmethod
-	def create_comment(cls, commentAuthor, commentBody, place_id, restaurant_name, **kwargs):
+	def create_comment(cls, commentAuthor, commentBody, **kwargs):
 		try:
 			cls.select().where(
 				(cls.user_id==user_id)

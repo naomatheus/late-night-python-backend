@@ -1,17 +1,10 @@
 import json
-
-from flask import Flask, jsonify, Blueprint, abort, make_response, g
-
+from flask import Flask, jsonify, Blueprint, abort, make_response, request, g
 from flask_restful import (Resource, Api, reqparse, inputs, fields, marshal, marshal_with, url_for)
-
 from flask_login import current_user
-
 import requests
-
 from resources import restaurants
-
 import models
-
 import config
 
 comment_fields = {
@@ -44,7 +37,7 @@ class Comment(Resource):
 		super().__init__()
 
 	# @marshal_with(comment_fields)
-	def post(self):
+	def get(self, id):
 		if g.user._get_current_object():
 			print(g.user._get_current_object())
 		args = self.reqparse.parse_args()
@@ -54,7 +47,7 @@ class Comment(Resource):
 		return (comment, 201)
 
 	# @marshal_with(comment_fields)
-	def put(self):
+	def put(self, place_id):
 		args = self.reqparse.parse_args()
 		print(args, '<===(req.body)')
 		updated_comment = models.Comment.update(**args)
@@ -62,7 +55,7 @@ class Comment(Resource):
 		return (comment, 201)
 
 	# @marshal_with(comment_fields)
-	def delete(self):
+	def delete(self, place_id):
 		comment_to_delete = models.Comment.delete()
 		print(comment_to_delete, '<=== comment will be deleted', type(comment))
 		return (comment_to_delete, 201)

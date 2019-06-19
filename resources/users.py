@@ -41,6 +41,7 @@ class UserList(Resource):
 			print(args, '<==== arguments to form body')
 			user = models.User.create_users(**args)
 			login_user(user)
+			user = marshal(user_fields)
 			return ({
 				'data': user,
 				'registered': True
@@ -87,25 +88,14 @@ class User(Resource):
 					'success': True
 					})
 
-	# def get(self):
-	#     try:
-	#         print(current_user,'<----- CURRENT USER ')
-	#         logged_out_user=current_user
-	#         logout_user()
-	#     except models.User.DoesNotExist:
-	#         abort(404)
-	#     else:
-	#         return ({
-	#         	'data': logged_out_user,
-	#         	'loggedout': True
-	#         	})
-
 class Logout(Resource):
-	# @login_required
 	def get(self):
+
 		logout_user()
 
 		return jsonify({'loggedout': True})
+
+
 
 users_api = Blueprint('resources.user', __name__)
 
